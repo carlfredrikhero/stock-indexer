@@ -36,9 +36,30 @@ steps.push(function(){
 
 steps.push(function(){
   console.log('Step 3 - Go to product');
-  page.open('http://webshop.eelab.se/Product?product=103976')
+  page.open('http://webshop.eelab.se/Product?product=103976', function(status){
+    console.log('Heyho: ' + status);
+    if (status === "success"){
+      console.log('success! Now get the stock balance');
+      var stock = 1000;
+      // var stock = page.evaluate(function(){
+      //   var html = document.getElementById('detailsBalance').innerHTML;
+      //   stock = html.substr(html.lastIndexOf('>')+1);
 
-  console.log(title);
+      //   return stock;
+      // });
+
+      // console.log(stock);
+
+      if (fs.isWritable('data/103976.txt')){
+        fs.write('data/103976.txt', stock, 'w');
+      } else {
+        console.log('cannot write to data/103976.txt');
+      }
+    } else {
+      console.log('failed to load page');
+    }
+
+  });
 });
 
 //Execute steps one by one
