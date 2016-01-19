@@ -1,0 +1,17 @@
+{
+  "name": "stock-indexer",
+  "version": "1.0.0",
+  "description": "Läsa av pris på webbplats",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carl-Fredrik Herö",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "chokidar": "^1.4.0",
+    "express": "^4.13.3",
+    "podio-js": "^1.4.2"
+  }
+}

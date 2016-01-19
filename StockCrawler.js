@@ -29,7 +29,7 @@ StockCrawler.prototype = {
   constructor: StockCrawler
   
   ,login: function(item){
-    //console.log('LOGIN');
+    console.log('LOGIN');
     this.item = item;
     this.login_attempt = true;
     this.page.evaluate(function(username, password){
@@ -41,10 +41,10 @@ StockCrawler.prototype = {
 
   , navigate_to_item: function(item, callback){
       this.callback = callback || this.callback;
-      var url = this.config.host + this.config.product_url + item.number;
+      var url = this.config.host + this.config.product_url + item.data.item_number;
       var that = this;
       this.page.open(url, function(status) {
-        //console.log('OPENED: ' + url);
+        console.log('OPENED: ' + url);
         //console.log('GOT: ' + that.page.url);
         if (that.page.url.indexOf(config.login_url) == 0){
           that.login(item);
@@ -58,7 +58,7 @@ StockCrawler.prototype = {
   , get_balance: function(){
     var balance = this.page.evaluate(function(){
       var html = document.getElementById('detailsBalance').innerHTML;
-      balance = html.substr(html.lastIndexOf('>')+1);
+      balance = parseInt(html.substr(html.lastIndexOf('>')+1)) || 0;
       return balance;
     });
 
