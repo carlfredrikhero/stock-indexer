@@ -52,7 +52,6 @@ Stock.prototype = {
   // },
   put_update: function(item_id, balance){
     console.log('put update');
-    console.log(item_id, balance);
     var timestamp = new Date().toISOString(),
       start_date = timestamp.substr(0,10),
       start_time = timestamp.substr(11,5);
@@ -66,15 +65,15 @@ Stock.prototype = {
       start_time: start_time
     };
 
-    console.log(data);
-
     this.podio.request('POST', '/item/app/' + this.config.balances.app_id + '/', {
       fields: data
     }).then(function(responseData){
       console.log('item create success');
-      console.log(responseData);
-    }).catch(function(err){
-      console.log(err);
+    }, function(e){
+      console.error('Error:', e.body.error);
+      console.error('Error description:', e.description);
+      console.error('HTTP status:', e.status);
+      console.error('Requested URL:', e.url);
     });
   }
 };

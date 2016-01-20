@@ -1,7 +1,7 @@
 var fs = require('fs');
 var config = JSON.parse(fs.readFileSync('config.json'));
 var express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var chokidar = require('chokidar');
 var PodioJS = require('podio-js').api;
 var Stock = require('./Stock.js');
@@ -65,7 +65,8 @@ var server = app.listen(3000, function () {
 function handlePodioHook(req){
   console.log('handlePodioHook started'); 
   console.log(req.body);
-  var type = req.body.type;
+  var type = req.body.type,
+  item_id = 0;
   switch(type){
     case 'hook.verify':
     var hook_id = parseInt(req.body.hook_id);
@@ -80,7 +81,7 @@ function handlePodioHook(req){
     break;
     case 'item.create':
       // add data to file
-      var item_id = parseInt(req.body.item_id);
+      item_id = parseInt(req.body.item_id);
 
       podio.request('GET', '/item/'+ item_id +'/value/'+ config.podio.products.fields.item_number +'/v2', undefined).then(function(responseData){
         var item_number = responseData.values;
@@ -106,7 +107,7 @@ function handlePodioHook(req){
     case 'item.update':
     break;
     case 'item.delete':
-      var item_id = parseInt(req.body.item_id);
+      item_id = parseInt(req.body.item_id);
       fs.unlink('./data/' + item_id + '.txt', function(err){
         if (err && err.code !== 'ENOENT'){ // don't trigger for missing files
           console.log(err);
