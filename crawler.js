@@ -1,5 +1,5 @@
 var fs = require('fs');
-var config = JSON.parse(fs.read('config.json'));
+var config = JSON.parse(fs.read('./config.json'));
 
 phantom.cookiesEnabled = true;
 phantom.javascriptEnabled = true;
@@ -12,7 +12,7 @@ var crawler = new StockCrawler(config);
 console.log('All settings loaded, start with execution');
 
 var items = get_items();
-var terminate = undefined;
+var terminate;
 
 function iterate(i){
   if (i<items.length){
@@ -61,7 +61,7 @@ function get_items(){
 
 setTimeout(function(){
   phantom.exit();
-}, 20000)
+}, 20000);
 
 
 

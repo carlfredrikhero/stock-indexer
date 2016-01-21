@@ -1,5 +1,5 @@
 var fs = require('fs');
-var config = JSON.parse(fs.readFileSync('config.json'));
+var config = JSON.parse(fs.readFileSync('./config.json'));
 var express = require('express');
 var bodyParser = require('body-parser');
 var chokidar = require('chokidar');
