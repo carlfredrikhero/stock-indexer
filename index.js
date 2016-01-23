@@ -38,7 +38,7 @@ var server = app.listen(3000, function () {
 
   var stock = new Stock(config.podio, podio);
 
-  var watcher = chokidar.watch('./data/', {
+  var watcher = chokidar.watch('./data/*.json', {
     ignored: /[\/\\]\./,
     persistent: true
   });
