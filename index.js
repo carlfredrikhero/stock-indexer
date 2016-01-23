@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.post('/hook/15obx191', function (req, res) {
   podio.isAuthenticated().then(function(){
     handlePodioHook(req);
-  }).catch(function(){
+  }, function(){
     podio.authenticateWithApp(config.podio.products.app_id, config.podio.products.app_token, function(err, responseData){
       console.log('app auth success');
       handlePodioHook(req);
@@ -75,7 +75,7 @@ function handlePodioHook(req){
       code: code
     }).then(function(responseData){
       console.log(responseData);
-    }).catch(function(err){
+    }, function(err){
       console.log(err);
     });
     break;
@@ -98,7 +98,7 @@ function handlePodioHook(req){
             console.log('The file was saved');
           }
         });
-      }).catch(function(err){
+      }, function(err){
         console.log(err);
         console.log('FEL FRÅN PODIO');
         console.err(err.message);

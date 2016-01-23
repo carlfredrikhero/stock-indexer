@@ -17,9 +17,9 @@ var Stock = function(config, podio){
 
 Stock.prototype = {
 
-  constructor: Stock
-  
-  ,update: function(item_id, data){
+  constructor: Stock,
+
+  update: function(item_id, data){
     // 1. Search by item number in title
     var that = this;
     this.podio.isAuthenticated().then(function(){
