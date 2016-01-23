@@ -19,6 +19,10 @@ var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get('/', function(req, res){
+  res.send('Hello World');
+});
+
 app.post('/hook/15obx191', function (req, res) {
   podio.isAuthenticated().then(function(){
     handlePodioHook(req);
