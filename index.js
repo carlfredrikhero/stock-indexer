@@ -83,8 +83,12 @@ function handlePodioHook(req){
       // add data to file
       item_id = parseInt(req.body.item_id);
 
+      console.log('item.create: ' + item_id);
+
       podio.request('GET', '/item/'+ item_id +'/value/'+ config.podio.products.fields.item_number +'/v2', undefined).then(function(responseData){
         var item_number = responseData.values;
+
+        console.log('item_number: ' + item_number);
 
         var data = {
           item_number: item_number,
