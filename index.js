@@ -103,13 +103,19 @@ function handlePodioHook(req){
           if (err){
             console.log(err);
           } else {
-            console.log('The file was saved');
+            podio.request('POST', '/comment/item/' + item_id, {
+              value: 'Artikel ' + item_number + ' har lagt till i listan och kommer att få lagersaldo kontrollerat varje timme.'
+            }).then(function(responseData){
+              console.log('comment added');
+            }, function(err){
+              console.err(err);
+            });
           }
         });
       }, function(err){
         console.log(err);
         console.log('FEL FRÅN PODIO');
-        console.err(err.message);
+        console.err(err.body);
       });
     break;
     case 'item.update':
