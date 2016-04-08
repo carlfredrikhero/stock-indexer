@@ -15,8 +15,8 @@ var StockCrawler = function(config){
   var that = this;
 
   this.page.onLoadFinished = function(){
-    //console.log('LOAD finished');
-    //console.log('LOGGED IN ' + that.login_attempt);
+    console.log('LOAD finished');
+    console.log('LOGGED IN ' + that.login_attempt);
     if (that.login_attempt){
       that.login_attempt = false;
       that.navigate_to_item(that.item);
@@ -49,7 +49,7 @@ StockCrawler.prototype = {
         if (that.page.url.indexOf(config.login_url) == 0){
           that.login(item);
         } else {
-          //console.log('GET DATA!!!');
+          console.log('GET DATA');
           that.get_balance();
         }
       });

@@ -8,12 +8,28 @@ http://code-epicenter.com/how-to-login-amazon-using-phantomjs-working-example/
 # TODO
  - [x] Installera PhantomJS : https://github.com/Pyppe/phantomjs2.0-ubuntu14.04x64/blob/master/README.md
  - [x] Installera pm2 för att styra applicationen
- - [ ] Skapa cronjob som kör phantomjs varje timme
+ - [x] Skapa cronjob som kör phantomjs varje timme
  - [x] skapa en webbanvändare som pm2 körs av (för att den inte ska ha tillgång till allt)
+ - [ ] Bryta ut filhanteringen i ett "store" objekt, store objektet tar hand om att skriva och läsa till filsystemet, på så sätt kan man enkelt testa Product utan filssystem + möjlighet att flytta till en DB-lösning senare
 
 /**
  * 1. Listen to created and deleted items in Podio
  * 2. On new item, add file to data directory (item_number.txt)
  * 3. On deleted item, remove file
- * 4. On file change, propagate change up to podio
+ * 4. every hour, run wget on a url to the app to trigger updates into Podio
  */
+
+# HOW TO
+
+Start phantomjs
+Start node with pm2
+npm start
+
+
+---
+
+get_files
+get_data
+
+write_data
+get_item_id

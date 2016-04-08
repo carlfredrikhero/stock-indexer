@@ -7,11 +7,16 @@ phantom.javascriptEnabled = true;
 var StockCrawler = require('./StockCrawler.js');
 var crawler = new StockCrawler(config);
 
+var get_items = require('./includes/helpers.js').get_items;
+
 /*********SETTINGS END*****************/
  
 console.log('All settings loaded, start with execution');
 
-var items = get_items();
+var items = get_items(config.data_path);
+
+console.log(JSON.stringify(items));
+
 var terminate;
 
 function iterate(i){
@@ -28,7 +33,7 @@ function iterate(i){
           var d = new Date();
           console.log(d.toTimeString() + ': exit phantom');
           phantom.exit();
-        }, 5000);
+        }, 10000);
       
         iterate(i+1);
       });
@@ -37,31 +42,10 @@ function iterate(i){
 
 iterate(0);
 
-// 1. Load all item data
-function get_items(){
-  var path = './data/';
-  var list = fs.list(path);
-  var items = [];
-
-  for(var i=0;i<list.length;i++){
-    var file = path + list[i];
-    if (fs.isFile(file)){
-      var data = JSON.parse(fs.read(file));
-        var item = {
-          file: file,
-          data: data
-        };
-
-        items.push(item);
-    }
-  }
-
-  return items;
-}
-
 setTimeout(function(){
+  console.log('Phantom timed out after 40 seconds.');
   phantom.exit();
-}, 20000);
+}, 60000);
 
 
 
