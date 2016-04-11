@@ -370,7 +370,6 @@
 	    // 1. Create array of balance objects
 	    products.map(function (product) {
 	      var data = product.to_object();
-	      console.log(data);
 	      return Balance({
 	        podio: podio,
 	        id: data.item_id,
@@ -468,7 +467,7 @@
 	    podio.request('POST', '/item/app/' + app_id + '/', {
 	      fields: data
 	    }).then(function (responseData) {
-	      console.log('item create success', responseData);
+	      console.log('item create success');
 	    }, function (e) {
 	      console.error('Error:', e.body.error);
 	      console.error('Error description:', e.description);

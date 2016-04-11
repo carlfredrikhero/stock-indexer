@@ -1,7 +1,8 @@
 /config.json
+/config.js
 
 /data/
-/tmp/
 /logs/
+/build/
 
 /node_modules/

@@ -60,7 +60,7 @@ let Balance = function(options){
     podio.request('POST', '/item/app/' + app_id + '/', {
       fields: data
     }).then(function(responseData){
-      console.log('item create success', responseData);
+      console.log('item create success');
     }, function(e){
       console.error('Error:', e.body.error);
       console.error('Error description:', e.description);
