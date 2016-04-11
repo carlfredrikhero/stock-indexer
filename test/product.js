@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 let fs = require('fs');
 
 let expect = require('chai').expect;
@@ -9,28 +9,22 @@ let Product = require('../app/product.js');
 const path = './test/mock/data/';
 
 describe('Product', function(){
-    
+
+    describe('Make sure isNode is set to true', function(){
+      it('Checks the const isNode equals true', function(){
+        let product = Product({path});
+
+        expect(product.isNode).to.be.true;
+      });
+    });
+
     describe('Missing required options', function(){
         it('Throws Error if path is missing from options', function(){
             expect(function(){
                 let product = Product({});
-            }).to.throw('No path set');
-        });
-
-        it('Throws Error if podio is missing from options', function(){
-            expect(function(){
-                let product = Product({path});
-            }).to.throw('No podio object set');
+            }).to.throw('No path or filepath set');
         });
     });
-
-    describe('Extrapolate item_id from path+filename', function(){
-      it ('Reads the item_id from the path+filename', function(){
-        let expected = 123456;
-        let item_id = Product.get_item_id_from_filename(path + expected + '.json');
-        expect(item_id).to.equal(expected);
-      });
-    })
 
     describe('Read from file', function(){
       it('Read the content of a file and makes it available with Product.to_object', sinon.test(function(){
@@ -41,7 +35,7 @@ describe('Product', function(){
         };
 
         let readFileStub = sinon.stub(fs, 'readFileSync');
-        readFileStub.returns(expected);
+        readFileStub.returns(JSON.stringify(expected));
 
         let podio = {};
         let product = Product({
@@ -54,6 +48,15 @@ describe('Product', function(){
 
         expect(product.to_object()).to.deep.equal(expected);
       }));
+    });
+
+    describe('Set value', function(){
+      it('sets a value which is expected to be included in to_object', function(){
+        let product = Product({path});
+        product.set('item_id', 123);
+
+        expect(product.to_object()).to.have.property('item_id', 123);
+      });
     });
 
     describe('Write to file', function(){
@@ -71,7 +74,7 @@ describe('Product', function(){
       it('writes the data in to_object() to a file as a JSON string', sinon.test(function(){
           writeFileStub.returns(undefined);
 
-          // return a "empty" promise ('then' does not return all value)
+          // return a 'empty' promise ('then' does not return all value)
           return product.write();
       }));
 

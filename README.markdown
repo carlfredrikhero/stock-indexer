@@ -11,6 +11,9 @@ http://code-epicenter.com/how-to-login-amazon-using-phantomjs-working-example/
  - [x] Skapa cronjob som kör phantomjs varje timme
  - [x] skapa en webbanvändare som pm2 körs av (för att den inte ska ha tillgång till allt)
  - [ ] Bryta ut filhanteringen i ett "store" objekt, store objektet tar hand om att skriva och läsa till filsystemet, på så sätt kan man enkelt testa Product utan filssystem + möjlighet att flytta till en DB-lösning senare
+ - [ ] Lägg till promise support till crawler.js https://github.com/stefanpenner/es6-promise
+     require('es6-promise').polyfill();
+ - [ ] Ändra product.write att ta hänsyn till phantomJS fs.write istället för writeFileSync
 
 /**
  * 1. Listen to created and deleted items in Podio

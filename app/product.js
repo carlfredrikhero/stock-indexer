@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const fs = require('fs');
 
@@ -6,33 +6,32 @@ let Product = function(options){
 
   let path;
   let filepath;
-  let podio;
-  let item_id = options.item_id || undefined;
-  let item_number = options.item_number || undefined;
-  let balance = options.balance || undefined;
+  let podio = options.podio || undefined;
+
+  let data = {
+    'item_id': options.item_id || undefined,
+    'item_number': options.item_number || undefined,
+    'balance': options.balance || undefined
+  }
 
   let fields = options.fields || undefined;
+
+  const isNode = typeof phantom === 'undefined';
 
   if (options.path){
     path = options.path;
   } else if (options.filepath) {
     filepath = options.filepath;
-    item_id = get_item_id_from_filepath(filepath);
+    data.item_id = get_item_id_from_filepath(filepath);
   } else {
     throw new Error('No path or filepath set');
   }
 
-  if (options.podio){
-    podio = options.podio;
-  } else {
-    throw new Error('No podio object set');
-  }
-
   function get_filename(){
     if (!filepath){
-      filepath = path + item_id + '.json';
+      filepath = path + data.item_id + '.json';
     }
-    
+
     return filepath;
   }
 
@@ -41,14 +40,14 @@ let Product = function(options){
   }
   /*
    * read item from Podio
-   */ 
+   */
   function fetch(){
     return new Promise(function(resolve, reject) {
-      let url = `/item/${item_id}/value/${fields.item_number}/v2`;
+      let url = `/item/${data.item_id}/value/${fields.item_number}/v2`;
       podio.request('GET', url, undefined)
       .then(function(response){
-        item_number = response.values;
-        balance = balance || 0;
+        data.item_number = response.values;
+        data.balance = data.balance || 0;
         resolve();
           ;
       }).catch(function(error){
@@ -59,31 +58,36 @@ let Product = function(options){
 
   /*
    * read item from file
-   */ 
+   */
   function read(){
     let filename = get_filename();
-    let data;
+    let file_content;
     if (isNode){
-      data = fs.readFileSync(filename, {
-        encoding: "utf8"
+      file_content = fs.readFileSync(filename, {
+        encoding: 'utf8'
       });
     } else {
-      data = fs.read(filename);
+      file_content = fs.read(filename);
     }
 
-    data = JSON.parse(data);
+    file_content = JSON.parse(file_content);
 
-    item_number = data.item_number;
-    balance = data.balance;
+    data.item_number = file_content.item_number;
+    data.balance = file_content.balance;
   }
 
   /*
    * write item to file
-   */ 
+   */
   function write(){
     return new Promise(function(resolve, reject) {
       try {
-        fs.writeFileSync(get_filename(), JSON.stringify(to_object()), 'utf8');
+        if (isNode){
+          fs.writeFileSync(get_filename(), JSON.stringify(to_object()), 'utf8');
+        } else {
+          fs.write(get_filename(), JSON.stringify(to_object()), 'w');
+        }
+
         resolve();
       } catch (err){
         reject(Error(err));
@@ -104,25 +108,27 @@ let Product = function(options){
     });
   }
 
-  function to_object(){
-    return {
-      "item_id": item_id,
-      "item_number": item_number,
-      "balance": balance
-    };
+  function set(key, value){
+    if (key in data){
+      data[key] = value;
+    } else {
+      throw new Error(`There is no ${key} in the product data.`);
+    }
   }
 
-  function isNode(){
-    return typeof phantom === "undefined";
+  function to_object(){
+    return data;
   }
 
   return {
-    fetch,
-    read,
-    write,
-    remove,
-    to_object,
-    get_filename
+    'fetch': fetch,
+    'get_filename': get_filename,
+    'isNode': isNode,
+    'read': read,
+    'remove': remove,
+    'set': set,
+    'to_object': to_object,
+    'write': write
   };
 };
 
