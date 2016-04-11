@@ -7,24 +7,27 @@ let Balance = require('./balance');
 let Products = (options) => {
 
   let path = options.path;
-  let balances_config = options.balances_config;
-  let podio = options.podio;
+  let balances_config = options.balances_config || undefined;
+  let podio = options.podio || undefined;
 
   let products = [];
-  const isNode = typeof phantom === "undefined";
+  const isNode = typeof phantom === 'undefined';
 
   let list = () => {
+    let files;
     if (isNode){
-      return fs.readdirSync(path)
-      .map(function(file){
-        return path + file;
-      })
-      .filter(function(file){
-        return (file.substr(-5) === ".json" && isFile(file));
-      });
+      files = fs.readdirSync(path);
     } else {
-      return fs.list(path);
+      files = fs.list(path);
     }
+
+    return files
+    .map(function(file){
+      return path + file;
+    })
+    .filter(function(file){
+      return (file.substr(-5) === '.json' && isFile(file));
+    });
   };
 
   /*

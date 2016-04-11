@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 let fs = require('fs');
 
 let expect = require('chai').expect;
@@ -10,18 +10,27 @@ const path = './test/mock/data/';
 
 describe('Products', function(){
   let readdirStub = sinon.stub(fs, 'readdirSync');
-  
+  let statSyncStub = sinon.stub(fs, 'statSync');
+  //fs.statSync(file).isFile()
+
   it('lists products', function(){
 
-    let expected = [
+    let files = [
       '256731742.json',
       '256731743.json',
       '256731744.json',
     ];
 
-    readdirStub.returns(expected);
+    let expected = files.map(file => path + file);
 
-    let products = Products(path);
+    readdirStub.returns(files);
+    statSyncStub.returns({
+      isFile: function() {
+        return true;
+      }
+    });
+
+    let products = Products({path});
 
     let list = products.list();
 
