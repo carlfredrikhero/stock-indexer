@@ -46,7 +46,6 @@ let Products = (options) => {
     products
     .map((product) => {
       let data = product.to_object();
-      console.log(data);
       return Balance({
         podio: podio,
         id: data.item_id,

@@ -1,4 +1,6 @@
-var config = require('./config');
+'use strict';
+
+var config = require('./config.js');
 var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
