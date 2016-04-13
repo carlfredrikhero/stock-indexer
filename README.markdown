@@ -27,3 +27,13 @@ http://code-epicenter.com/how-to-login-amazon-using-phantomjs-working-example/
 Start phantomjs
 Start node with pm2
 npm start
+
+Node versioner installerade med hjälpa av nvm
+
+https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-an-ubuntu-14-04-server
+https://github.com/creationix/nvm
+
+INSTALLERA PM2 GLOBALT IGEN
+
+$ nvm use system
+     $ npm uninstall -g a_module

@@ -61,6 +61,6 @@ let fetch_from_web = (items) => {
 fetch_from_web(items);
 
 setTimeout(function(){
-  console.log('Phantom timed out after 40 seconds.');
+  console.log('Phantom timed out after 120 seconds.');
   phantom.exit();
-}, 40000);
+}, 120000);
