@@ -37,16 +37,18 @@ let fetch_from_web = (items) => {
     data: product.to_object()
   };
 
+  let terminate;
+
   crawler.navigate_to_item(item, (balance) => {
     console.log('Item: ' + item.data.item_id + ', Balance => ', balance);
     product.set('balance', balance);
     product.write().then(() => {
       clearTimeout(terminate);
-      var terminate = setTimeout(function(){
+      terminate = setTimeout(function(){
         var d = new Date();
         console.log(d.toTimeString() + ': exit phantom');
         phantom.exit();
-      }, 10000);
+      }, 15000);
 
       if (items.length){
         fetch_from_web(items);
