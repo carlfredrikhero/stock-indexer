@@ -40,7 +40,6 @@ let fetch_from_web = (items) => {
   let terminate;
 
   crawler.navigate_to_item(item, (balance) => {
-    console.log('Item: ' + item.data.item_id + ', Balance => ', balance);
     product.set('balance', balance);
     product.write().then(() => {
       clearTimeout(terminate);
@@ -66,3 +65,15 @@ setTimeout(function(){
   console.log('Phantom timed out after 120 seconds.');
   phantom.exit();
 }, 120000);
+
+phantom.onError = (msg, trace) => {
+  var msgStack = ['PHANTOM ERROR: ' + msg];
+  if (trace && trace.length) {
+    msgStack.push('TRACE:');
+    trace.forEach(function(t) {
+      msgStack.push(' -> ' + (t.file || t.sourceURL) + ': ' + t.line + (t.function ? ' (in function ' + t.function +')' : ''));
+    });
+  }
+  console.error(msgStack.join('\n'));
+  phantom.exit(1);
+};

@@ -28,26 +28,25 @@ module.exports = {
     });
 
     let product_array = products
-                   .list()
-                   .map((filepath) => {
-                    console.log(filepath);
-                    return Product({
-                      podio: podio,
-                      filepath: filepath
-                    });
-                   });
-
-      product_array.forEach(p => p.read());
-
-      products.add(product_array);
-
-      podio.isAuthenticated().then(() => {
-        products.save();
-      }).catch((err) => {
-        podio.authenticateWithApp(config.podio.balances.app_id, config.podio.balances.app_token, function() {
-          products.save();
-        });
+    .list()
+    .map((filepath) => {
+      return Product({
+        podio: podio,
+        filepath: filepath
       });
+    });
+
+    product_array.forEach(p => p.read());
+
+    products.add(product_array);
+
+    podio.isAuthenticated().then(() => {
+      products.save();
+    }).catch((err) => {
+      podio.authenticateWithApp(config.podio.balances.app_id, config.podio.balances.app_token, function() {
+        products.save();
+      });
+    });
 
     res.send('Items will be updated in Podio. You can close this window.');
   }
