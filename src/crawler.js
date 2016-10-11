@@ -23,8 +23,7 @@ let items = products
   return Product({
     filepath: filepath
   });
-})
-;
+});
 
 items.forEach(p => p.read());
 
@@ -39,27 +38,47 @@ let fetch_from_web = (items) => {
 
   let terminate;
 
-  crawler.navigate_to_item(item, (balance) => {
-    product.set('balance', balance);
-    product.write().then(() => {
-      clearTimeout(terminate);
-      terminate = setTimeout(function(){
-        var d = new Date();
-        console.log(d.toTimeString() + ': exit phantom');
-        phantom.exit();
-      }, 15000);
+  crawler.navigate_to_item(item, (err, data) => {
+    if (err){
+      console.log(err);
+      let data = product.to_object();
+      console.log(data);
+      let text = `Artikel ${data.item_number} har av någon anledning ingen information på webshop. Ingen balans kommer att uppdateras framöver. Artikeln kan raderas.`;
+      console.log(text);
+      product
+        .comment(text)
+        .then(product.remove)
+        .catch(console.error);
 
-      if (items.length){
-        fetch_from_web(items);
-      }
-    }).catch((err) => {
-      console.error(err);
-    });
+      return;
+    } else {
+      console.log(JSON.stringify(data));
+      product.set('balance', data.balance);
+      product.set('item_name', data.item_name);
+    }
+
+    product
+      .write()
+      .then(next_item)
+      .catch(console.error);
 
   });
 };
 
 fetch_from_web(items);
+
+let next_item = () => {
+  clearTimeout(terminate);
+  terminate = setTimeout(function(){
+    var d = new Date();
+    console.log(d.toTimeString() + ': exit phantom');
+    phantom.exit();
+  }, 15000);
+
+  if (items.length){
+    fetch_from_web(items);
+  }
+};
 
 setTimeout(function(){
   console.log('Phantom timed out after 120 seconds.');

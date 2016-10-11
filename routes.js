@@ -49,5 +49,13 @@ module.exports = {
     });
 
     res.send('Items will be updated in Podio. You can close this window.');
+  },
+  list_files: (req, res) => {
+
+      let p = Product({
+        filepath: '/Users/carlfredrikhero/Web/Node/stock-indexer/data/435689966.json'
+      });
+
+    res.send(JSON.stringify(p.to_object()));
   }
 };

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-let Product = function(options){
+let Product = (options) => {
 
   let path;
   let filepath;
@@ -11,12 +11,17 @@ let Product = function(options){
   let data = {
     'item_id': options.item_id || undefined,
     'item_number': options.item_number || undefined,
+    'item_name': options.item_name || undefined,
     'balance': options.balance || undefined
   }
 
   let fields = options.fields || undefined;
 
   const isNode = typeof phantom === 'undefined';
+
+  let get_item_id_from_filepath = (path) => {
+    return parseInt(path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.')));
+  }
 
   if (options.path){
     path = options.path;
@@ -27,7 +32,7 @@ let Product = function(options){
     throw new Error('No path or filepath set');
   }
 
-  function get_filename(){
+  let get_filename = () => {
     if (!filepath){
       filepath = path + data.item_id + '.json';
     }
@@ -35,22 +40,19 @@ let Product = function(options){
     return filepath;
   }
 
-  function get_item_id_from_filepath(path){
-    return parseInt(path.substring(path.lastIndexOf('/')+1, path.lastIndexOf('.')));
-  }
   /*
    * read item from Podio
    */
-  function fetch(){
-    return new Promise(function(resolve, reject) {
+  let fetch = () => {
+    return new Promise((resolve, reject) => {
       let url = `/item/${data.item_id}/value/${fields.item_number}/v2`;
       podio.request('GET', url, undefined)
-      .then(function(response){
+      .then((response) => {
         data.item_number = response.values;
         data.balance = data.balance || 0;
         resolve();
           ;
-      }).catch(function(error){
+      }).catch((error) => {
         reject(Error(error));
       });
     });
@@ -59,7 +61,7 @@ let Product = function(options){
   /*
    * read item from file
    */
-  function read(){
+  let read = () => {
     let filename = get_filename();
     let file_content;
     if (isNode){
@@ -79,8 +81,8 @@ let Product = function(options){
   /*
    * write item to file
    */
-  function write(){
-    return new Promise(function(resolve, reject) {
+  let write = () => {
+    return new Promise((resolve, reject) => {
       try {
         if (isNode){
           fs.writeFileSync(get_filename(), JSON.stringify(to_object()), 'utf8');
@@ -95,10 +97,29 @@ let Product = function(options){
     });
   }
 
-  function remove(){
-    return new Promise(function(resolve, reject) {
+  let comment = (text) => {
+    return new Promise((resolve, reject) => {
+      if (!data.item_id){
+        reject(Error('No item id'));
+      } else {
+        let url = `/comment/item/${data.item_id}`;
+        podio.request('POST', url, {
+          value: text
+        })
+        .then((response) => {
+          resolve();
+        })
+        .catch((error) => {
+          reject(Error(error));
+        });
+      }
+    });
+  }
+
+  let remove = () => {
+    return new Promise((resolve, reject) => {
       let filename = get_filename();
-      fs.unlink(filename, function(err){
+      fs.unlink(filename, (err) => {
         if (err && err.code !== 'ENOENT'){ // don't trigger for missing files
           reject(Error(err));
         } else {
@@ -108,7 +129,7 @@ let Product = function(options){
     });
   }
 
-  function set(key, value){
+  let set = (key, value) => {
     if (key in data){
       data[key] = value;
     } else {
@@ -116,7 +137,7 @@ let Product = function(options){
     }
   }
 
-  function to_object(){
+  let to_object = () => {
     return data;
   }
 
@@ -128,7 +149,8 @@ let Product = function(options){
     'remove': remove,
     'set': set,
     'to_object': to_object,
-    'write': write
+    'write': write,
+    'comment': comment
   };
 };
 

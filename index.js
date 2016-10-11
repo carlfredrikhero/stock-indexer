@@ -29,6 +29,7 @@ app.use(PodioMiddleware({
 app.get('/', routes.home);
 app.post('/hook/15obx191', routes.hook);
 app.get('/trigger', routes.trigger);
+app.get('/list-files', routes.list_files);
 
 
 var server = app.listen(3000, function () {

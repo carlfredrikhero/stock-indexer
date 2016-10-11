@@ -3,7 +3,7 @@
  * Product page function
  */
 
-var StockCrawler = (config) => {
+let StockCrawler = (config) => {
   let item;
   let cb;
   let login_attempt = false;
@@ -36,27 +36,41 @@ var StockCrawler = (config) => {
 
   let navigate_to_item = (item, callback) => {
       cb = callback || cb;
-      var url = config.host + config.product_url + item.data.item_number;
+      let url = config.host + config.product_url + item.data.item_number;
       page.open(url, (status) => {
         console.log('OPENED: ' + url);
         console.log('GOT: ' + page.url);
         if (page.url.indexOf(config.login_url) == 0){
           login(item);
         } else {
-          console.log('GET DATA');
           get_balance();
         }
       });
   }
 
   let get_balance = () => {
-    var balance = page.evaluate(function(){
-      var html = document.getElementById('detailsBalance').innerHTML;
+    let balance = page.evaluate(function(){
+      let el = document.getElementById('detailsBalance');
+      if (null === el){
+        return null;
+      }
+      let html = el.innerHTML;
       balance = parseInt(html.substr(html.lastIndexOf('>')+1)) || 0;
       return balance;
     });
 
-    cb(balance);
+    let item_name = page.evaluate(function(){
+      let item_name = document.querySelector('#img-area h2').innerText;
+
+      return item_name;
+    });
+
+    // Error handling
+    if ('' === balance || null === item_name){
+      cb('No details', null);
+    } else {
+      cb(null, { balance, item_name });
+    }
   }
 
   return {
