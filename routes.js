@@ -32,7 +32,9 @@ module.exports = {
     .map((filepath) => {
       return Product({
         podio: podio,
-        filepath: filepath
+        filepath: filepath,
+        app_id: config.podio.products.app_id,
+        fields: config.podio.products.fields
       });
     });
 
@@ -40,22 +42,19 @@ module.exports = {
 
     products.add(product_array);
 
-    podio.isAuthenticated().then(() => {
-      products.save();
-    }).catch((err) => {
+    console.log('HJEEL');
+
+    podio.authenticateWithApp(config.podio.products.app_id, config.podio.products.app_token, function() {
+      product_array.forEach((p) => {
+        console.log('write name to podio');
+        p.write_name_to_podio();
+      });
+
       podio.authenticateWithApp(config.podio.balances.app_id, config.podio.balances.app_token, function() {
         products.save();
       });
     });
 
     res.send('Items will be updated in Podio. You can close this window.');
-  },
-  list_files: (req, res) => {
-
-      let p = Product({
-        filepath: '/Users/carlfredrikhero/Web/Node/stock-indexer/data/435689966.json'
-      });
-
-    res.send(JSON.stringify(p.to_object()));
   }
 };

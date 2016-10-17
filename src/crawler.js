@@ -16,6 +16,8 @@ phantom.javascriptEnabled = true;
 var StockCrawler = require('../app/StockCrawler.js');
 var crawler = new StockCrawler(config);
 
+var terminate;
+
 // 1. Get all items
 let items = products
 .list()
@@ -36,32 +38,26 @@ let fetch_from_web = (items) => {
     data: product.to_object()
   };
 
-  let terminate;
-
   crawler.navigate_to_item(item, (err, data) => {
     if (err){
       console.log(err);
       let data = product.to_object();
-      console.log(data);
       let text = `Artikel ${data.item_number} har av någon anledning ingen information på webshop. Ingen balans kommer att uppdateras framöver. Artikeln kan raderas.`;
-      console.log(text);
       product
         .comment(text)
         .then(product.remove)
-        .catch(console.error);
+        .catch((e) => console.log('ERROR', err));
 
       return;
-    } else {
-      console.log(JSON.stringify(data));
-      product.set('balance', data.balance);
-      product.set('item_name', data.item_name);
     }
+
+    product.set('balance', data.balance);
+    product.set('item_name', data.item_name);
 
     product
       .write()
       .then(next_item)
-      .catch(console.error);
-
+      .catch((e) => console.log('ERROR', err));
   });
 };
 
@@ -83,7 +79,7 @@ let next_item = () => {
 setTimeout(function(){
   console.log('Phantom timed out after 120 seconds.');
   phantom.exit();
-}, 120000);
+}, 30000);
 
 phantom.onError = (msg, trace) => {
   var msgStack = ['PHANTOM ERROR: ' + msg];

@@ -6,7 +6,6 @@ let Product = (options) => {
 
   let path;
   let filepath;
-  let podio = options.podio || undefined;
 
   let data = {
     'item_id': options.item_id || undefined,
@@ -16,6 +15,8 @@ let Product = (options) => {
   }
 
   let fields = options.fields || undefined;
+
+  let podio = options.podio || undefined;
 
   const isNode = typeof phantom === 'undefined';
 
@@ -75,6 +76,7 @@ let Product = (options) => {
     file_content = JSON.parse(file_content);
 
     data.item_number = file_content.item_number;
+    data.item_name = file_content.item_name;
     data.balance = file_content.balance;
   }
 
@@ -94,6 +96,27 @@ let Product = (options) => {
       } catch (err){
         reject(Error(err));
       }
+    });
+  }
+
+  let write_name_to_podio = () => {
+    let new_data = {};
+
+    // TODO break out into mapping function
+    new_data[fields.item_name] = data.item_name;
+
+    console.log('NEW_DATA', new_data);
+    console.log('DATA', data);
+
+    podio.request('PUT', '/item/' + data.item_id, {
+      fields: new_data
+    }).then(function(responseData){
+      console.log('item create success');
+    }, function(e){
+      console.error('Error:', e.body.error);
+      console.error('Error description:', e.description);
+      console.error('HTTP status:', e.status);
+      console.error('Requested URL:', e.url);
     });
   }
 
@@ -150,6 +173,7 @@ let Product = (options) => {
     'set': set,
     'to_object': to_object,
     'write': write,
+    'write_name_to_podio': write_name_to_podio,
     'comment': comment
   };
 };
