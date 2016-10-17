@@ -65,7 +65,7 @@ fetch_from_web(items);
 
 let next_item = () => {
   clearTimeout(terminate);
-  terminate = setTimeout(function(){
+  terminate = setTimeout(() => {
     var d = new Date();
     console.log(d.toTimeString() + ': exit phantom');
     phantom.exit();
@@ -76,10 +76,11 @@ let next_item = () => {
   }
 };
 
-setTimeout(function(){
-  console.log('Phantom timed out after 120 seconds.');
+const tout = config.phantomjs.timeout || 120;
+setTimeout(() => {
+  console.log(`Phantom timed out after ${tout} seconds.`);
   phantom.exit();
-}, 30000);
+}, tout*1000);
 
 phantom.onError = (msg, trace) => {
   var msgStack = ['PHANTOM ERROR: ' + msg];
