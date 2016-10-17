@@ -50,19 +50,24 @@ let StockCrawler = (config) => {
 
   let get_balance = () => {
     let balance = page.evaluate(function(){
-      let el = document.getElementById('detailsBalance');
-      if (null === el){
+      try {
+        let el = document.getElementById('detailsBalance');
+        let html = el.innerHTML;
+        balance = parseInt(html.substr(html.lastIndexOf('>')+1)) || 0;
+        return balance;
+      } catch (e) {
         return null;
       }
-      let html = el.innerHTML;
-      balance = parseInt(html.substr(html.lastIndexOf('>')+1)) || 0;
-      return balance;
     });
 
     let item_name = page.evaluate(function(){
-      let item_name = document.querySelector('#img-area h2').innerText;
+      try {
+        let item_name = document.querySelector('#img-area h2').innerText;
+        return item_name;
+      } catch (e){
+        return null;
+      }
 
-      return item_name;
     });
 
     // Error handling
