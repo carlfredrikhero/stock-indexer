@@ -1,39 +1,34 @@
 'use strict';
 
-var config = require('./config.js');
-var fs = require('fs');
-var express = require('express');
-var bodyParser = require('body-parser');
-var session = require('express-session')
-var PodioMiddleware = require('podio-js').middleware;
+const config = require('./config.js');
+const Podio = require('podio-js').api;
 
-var routes = require('./routes');
+const podio_create_item = require('./app/podio_create_item.js')
 
-var app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
-}));
-
-app.use(PodioMiddleware({
+const podio = new Podio({
   authType: 'app',
   clientId: config.podio.client_id,
   clientSecret: config.podio.client_secret
-}));
+})
 
+const podio_create_product =  podio_create_item(
+                                podio,
+                                config.podio.products.app_id,
+                                config.podio.products.app_token
+                              )
 
+const podio_create_tests =  podio_create_item(
+                                podio,
+                                '17011778',
+                                '293595ce65224aafa1648941bdd2e9f4'
+                              )
 
-app.get('/', routes.home);
-app.post('/hook/15obx191', routes.hook);
-app.get('/trigger', routes.trigger);
+podio_create_product({
+  '111827783': 'Artikelnummer'
+})
+.then(podio_create_tests({
+  '132665': 'En liten titel'
+})).catch((err) => {
+  console.log('ERROR', JSON.stringify(err));
+})
 
-
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
-});
