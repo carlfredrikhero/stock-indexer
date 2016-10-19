@@ -46,7 +46,7 @@ let fetch_from_web = (items) => {
       product
         .comment(text)
         .then(product.remove)
-        .catch((e) => console.log('ERROR', err));
+        .catch((e) => console.log('ERROR', JSON.stringify(e)));
 
       return;
     }
