@@ -7,6 +7,8 @@ let Product = (options) => {
   let path;
   let filepath;
 
+  console.log('PRODUCT CONFIG', JSON.stringify(options));
+
   let data = {
     'item_id': options.item_id || undefined,
     'item_number': options.item_number || undefined,
@@ -113,10 +115,10 @@ let Product = (options) => {
     }).then(function(responseData){
       console.log('item create success');
     }, function(e){
-      console.error('Error:', e.body.error);
-      console.error('Error description:', e.description);
-      console.error('HTTP status:', e.status);
-      console.error('Requested URL:', e.url);
+      console.log('Error:', e.body.error);
+      console.log('Error description:', e.description);
+      console.log('HTTP status:', e.status);
+      console.log('Requested URL:', e.url);
     });
   }
 
