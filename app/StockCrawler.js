@@ -56,7 +56,7 @@ let StockCrawler = (config) => {
         balance = parseInt(html.substr(html.lastIndexOf('>')+1)) || 0;
         return balance;
       } catch (e) {
-        return null;
+        return '';
       }
     });
 
@@ -65,13 +65,13 @@ let StockCrawler = (config) => {
         let item_name = document.querySelector('#img-area h2').innerText;
         return item_name;
       } catch (e){
-        return null;
+        return '';
       }
 
     });
 
     // Error handling
-    if ('' === balance || null === item_name){
+    if ('' === balance || '' === item_name){
       cb('No details', null);
     } else {
       cb(null, { balance, item_name });

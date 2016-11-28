@@ -13,7 +13,8 @@ let Product = (options) => {
     'item_id': options.item_id || undefined,
     'item_number': options.item_number || undefined,
     'item_name': options.item_name || undefined,
-    'balance': options.balance || undefined
+    'balance': options.balance || undefined,
+    'active': options.active || true
   }
 
   let fields = options.fields || undefined;
@@ -80,6 +81,7 @@ let Product = (options) => {
     data.item_number = file_content.item_number;
     data.item_name = file_content.item_name;
     data.balance = file_content.balance;
+    data.active = file_content.active;
   }
 
   /*
@@ -154,6 +156,12 @@ let Product = (options) => {
     });
   }
 
+  let get = (key) => {
+    if (key in data){
+      return data[key];
+    }
+  }
+
   let set = (key, value) => {
     if (key in data){
       data[key] = value;
@@ -173,6 +181,7 @@ let Product = (options) => {
     'read': read,
     'remove': remove,
     'set': set,
+    'get': get,
     'to_object': to_object,
     'write': write,
     'write_name_to_podio': write_name_to_podio,

@@ -42,12 +42,18 @@ module.exports = {
 
     products.add(product_array);
 
-    console.log('HJEEL');
-
     podio.authenticateWithApp(config.podio.products.app_id, config.podio.products.app_token, function() {
       product_array.forEach((p) => {
-        console.log('write name to podio');
-        p.write_name_to_podio();
+        if (p.get('active')){
+          console.log('write name to podio');
+          p.write_name_to_podio();
+        } else {
+          let text = `Artikel ${p.get('item_number')} har av någon anledning ingen information på webshop. Ingen balans kommer att uppdateras framöver. Artikeln kan raderas.`;
+          p
+            .comment(text)
+            .then(p.remove)
+            .catch((e) => console.log('ERROR', JSON.stringify(e)))
+        }
       });
 
       podio.authenticateWithApp(config.podio.balances.app_id, config.podio.balances.app_token, function() {

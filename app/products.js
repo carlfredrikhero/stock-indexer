@@ -44,18 +44,20 @@ let Products = (options) => {
   let save = () => {
     // 1. Create array of balance objects
     products
-    .map((product) => {
+    .filter((product) => {
       let data = product.to_object();
-      return Balance({
-        podio: podio,
-        id: data.item_id,
-        app_id: balances_config.app_id,
-        balance: data.balance,
-        fields: balances_config.fields
-      });
+      return data.active
     })
     // 2. Iterate through array of balance objects and call save on each
-    .forEach((balance) => {
+    .forEach((product) => {
+      let data = product.to_object();
+      let balance = Balance({
+          podio: podio,
+          id: data.item_id,
+          app_id: balances_config.app_id,
+          balance: data.balance,
+          fields: balances_config.fields
+        });
       balance.save();
     });
 

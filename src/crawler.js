@@ -40,19 +40,11 @@ let fetch_from_web = (items) => {
 
   crawler.navigate_to_item(item, (err, data) => {
     if (err){
-      console.log(err);
-      let data = product.to_object();
-      let text = `Artikel ${data.item_number} har av någon anledning ingen information på webshop. Ingen balans kommer att uppdateras framöver. Artikeln kan raderas.`;
-      product
-        .comment(text)
-        .then(product.remove)
-        .catch((e) => console.log('ERROR', JSON.stringify(e)));
-
-      return;
+      product.set('active', false)
+    } else {
+      product.set('balance', data.balance);
+      product.set('item_name', data.item_name);
     }
-
-    product.set('balance', data.balance);
-    product.set('item_name', data.item_name);
 
     product
       .write()
