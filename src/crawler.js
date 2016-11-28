@@ -44,6 +44,7 @@ let fetch_from_web = (items) => {
     } else {
       product.set('balance', data.balance);
       product.set('item_name', data.item_name);
+      product.set('active', true)
     }
 
     product
