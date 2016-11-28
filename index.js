@@ -26,9 +26,12 @@ const podio_create_tests =  podio_create_item(
 podio_create_product({
   '111827783': 'Artikelnummer'
 })
-.then(podio_create_tests({
-  '132665': 'En liten titel'
-})).catch((err) => {
-  console.log('ERROR', JSON.stringify(err));
+.then(function(){
+  return podio_create_tests({
+    '132665836': 'Test-titel'
+  })
+})
+.catch(function(err){
+  console.log('LAST ERROR', err);
 })
 
