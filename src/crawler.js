@@ -39,12 +39,15 @@ let fetch_from_web = (items) => {
   };
 
   crawler.navigate_to_item(item, (err, data) => {
-    if (err){
+    if (err && product.get('attempts') >= 3){
       product.set('active', false)
+    } else if (err) {
+      product.set('attempts', product.get('attempts') + 1)
     } else {
       product.set('balance', data.balance);
       product.set('item_name', data.item_name);
       product.set('active', true)
+      product.set('attempts',0)
     }
 
     product

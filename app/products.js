@@ -46,7 +46,7 @@ let Products = (options) => {
     products
     .filter((product) => {
       let data = product.to_object();
-      return data.active
+      return data.active && data.attempts === 0
     })
     // 2. Iterate through array of balance objects and call save on each
     .forEach((product) => {

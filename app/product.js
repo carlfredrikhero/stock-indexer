@@ -7,14 +7,13 @@ let Product = (options) => {
   let path;
   let filepath;
 
-  console.log('PRODUCT CONFIG', JSON.stringify(options));
-
   let data = {
     'item_id': options.item_id || undefined,
     'item_number': options.item_number || undefined,
     'item_name': options.item_name || undefined,
     'balance': options.balance || undefined,
-    'active': options.active || true
+    'active': options.active || true,
+    'attempts': options.attempts || 0
   }
 
   let fields = options.fields || undefined;
@@ -82,6 +81,7 @@ let Product = (options) => {
     data.item_name = file_content.item_name;
     data.balance = file_content.balance;
     data.active = file_content.active;
+    data.attempts = file_content.attempts;
   }
 
   /*
@@ -109,13 +109,9 @@ let Product = (options) => {
     // TODO break out into mapping function
     new_data[fields.item_name] = data.item_name;
 
-    console.log('NEW_DATA', new_data);
-    console.log('DATA', data);
-
     podio.request('PUT', '/item/' + data.item_id, {
       fields: new_data
     }).then(function(responseData){
-      console.log('item create success');
     }, function(e){
       console.log('Error:', e.body.error);
       console.log('Error description:', e.description);
